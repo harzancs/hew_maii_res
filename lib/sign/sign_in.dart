@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/page/pageMain.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -205,6 +206,11 @@ class _SignInState extends State<SignIn> {
                                   RaisedButton(
                                     onPressed: () {
                                       if (_formKey.currentState.validate()) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => PageMain()),
+                                        );
                                       }
                                     },
                                     color: Colors.green,
