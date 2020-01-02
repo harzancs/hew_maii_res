@@ -138,36 +138,63 @@ class _PageMainState extends State<PageMain> {
   }
 
   Future<bool> _onWillPop() async {
-    return (await showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text(
-              'แน่ใจหรือไม่ ?',
-              style: TextStyle(fontFamily: FontStyles().fontFamily),
-            ),
-            content: new Text(
-              'คุณต้องการออกจากแอพนี้',
-              style: TextStyle(fontFamily: FontStyles().fontFamily),
-            ),
-            actions: <Widget>[
-              new FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: new Text(
-                  'ไม่',
-                  style: TextStyle(fontFamily: FontStyles().fontFamily),
-                ),
+    if (switchControl == true) {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text(
+                'ไม่สามารถออกจากแอพได้ !',
+                style: TextStyle(fontFamily: FontStyles().fontFamily),
               ),
-              new FlatButton(
-                onPressed: () => SystemNavigator.pop(),
-                child: new Text(
-                  'ใช่',
-                  style: TextStyle(fontFamily: FontStyles().fontFamily),
-                ),
+              content: new Text(
+                'หากคุณต้องการออกจากแอพนี้ คุณจำเป็นต้อง ปิดร้าน เสียก่อน',
+                style: TextStyle(fontFamily: FontStyles().fontFamily),
               ),
-            ],
-          ),
-        )) ??
-        false;
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text(
+                    'ปิด',
+                    style: TextStyle(fontFamily: FontStyles().fontFamily),
+                  ),
+                ),
+                
+              ],
+            ),
+          )) ??
+          false;
+    } else {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: new Text(
+                'แน่ใจหรือไม่ ?',
+                style: TextStyle(fontFamily: FontStyles().fontFamily),
+              ),
+              content: new Text(
+                'คุณต้องการออกจากแอพนี้',
+                style: TextStyle(fontFamily: FontStyles().fontFamily),
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: new Text(
+                    'ไม่',
+                    style: TextStyle(fontFamily: FontStyles().fontFamily),
+                  ),
+                ),
+                new FlatButton(
+                  onPressed: () => SystemNavigator.pop(),
+                  child: new Text(
+                    'ใช่',
+                    style: TextStyle(fontFamily: FontStyles().fontFamily),
+                  ),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
   }
 
   @override
@@ -196,12 +223,12 @@ class _PageMainState extends State<PageMain> {
                     fontSize: 22,
                     shadows: <Shadow>[
                       Shadow(
-                        offset: Offset(5.0, 5.0),
+                        offset: Offset(0, 0),
                         blurRadius: 5.0,
                         color: Color(0xFFFF6F18),
                       ),
                       Shadow(
-                        offset: Offset(6.0, 6.0),
+                        offset: Offset(0, 0),
                         blurRadius: 8.0,
                         color: Colors.black,
                       ),
