@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:intl/intl.dart';
 
 class PageMain extends StatefulWidget {
   @override
@@ -9,6 +12,128 @@ class PageMain extends StatefulWidget {
 class _PageMainState extends State<PageMain> {
   TextStyle listurgerBar =
       new TextStyle(fontFamily: FontStyles().fontFamily, fontSize: 18);
+  TextStyle styleOpen = new TextStyle(
+      fontFamily: FontStyles().fontFamily, fontSize: 18, color: Colors.green);
+  TextStyle styleClose = new TextStyle(
+      fontFamily: FontStyles().fontFamily, fontSize: 18, color: Colors.red);
+
+  Timer timer;
+
+  bool switchControl = false;
+  var textHolder = 'Switch is OFF';
+  var _date1;
+
+  void toggleSwitch(bool value) {
+    if (switchControl == false) {
+      setState(() {
+        switchControl = true;
+        textHolder = 'Switch is ON';
+        Timer.periodic(Duration(seconds: 5), (timer) {
+          setState(() {
+            var now = new DateTime.now();
+            _date1 = DateFormat("d/M/yyyy H:mm").format(now);
+            openJob(context);
+          });
+        });
+      });
+      print('Switch is ON');
+      // Put your code here which you want to execute on Switch ON event.
+
+    } else {
+      setState(() {
+        switchControl = false;
+        textHolder = 'Switch is OFF';
+      });
+      print('Switch is OFF');
+      // Put your code here which you want to execute on Switch OFF event.
+    }
+  }
+
+  Widget txtStatus(bool swithControl) {
+    if (swithControl == true) {
+      return Text(
+        "เปิดร้าน OPEN",
+        style: styleOpen,
+      );
+    } else {
+      return Text("ปิดร้าน CLOSE", style: styleClose);
+    }
+  }
+
+  Widget closeJob() {
+    return Center(
+      child: Container(
+        height: MediaQuery.of(context).size.width * 1.30,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.layers_clear,
+              size: 100,
+              color: Colors.white,
+            ),
+            Text("CLOSE",
+                style: TextStyle(
+                    fontSize: 30,
+                    fontFamily: FontStyles().fontFamily,
+                    color: Colors.white))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget openJob(context) {
+    TextStyle txtt = new TextStyle(
+        fontFamily: FontStyles().fontFamily, color: Colors.white, fontSize: 18);
+    return Container(
+      height: MediaQuery.of(context).copyWith().size.height * .79,
+      width: MediaQuery.of(context).copyWith().size.height * .55,
+      // color: Colors.blue,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(5),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text("วันที่ $_date1", style: txtt),
+              Text("รวม 100 รายการ", style: txtt),
+            ],
+          ),
+          Divider(
+            color: Colors.white,
+          ),
+          Container(
+            height: MediaQuery.of(context).copyWith().size.height * .7,
+            child: ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: 10,
+              shrinkWrap: true,
+              itemBuilder: (contant, index) {
+                return Container(
+                  height: 100,
+                  child: Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[Text(index.toString())],
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    if (switchControl == true) {}
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,31 +237,19 @@ class _PageMainState extends State<PageMain> {
         ]),
       ),
       body: Container(
-          height: 1000,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
+        height: 1000,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
+        ),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              switchControl ? openJob(context) : closeJob(),
+            ],
           ),
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(15),
-                ),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      " จัดการร้านค้า",
-                      style: TextStyle(
-                          fontFamily: FontStyles().fontFamily,
-                          fontSize: 26,
-                          color: Colors.white),
-                    )
-                  ],
-                )
-              ],
-            ),
-          )),
+        ),
+      ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -145,17 +258,18 @@ class _PageMainState extends State<PageMain> {
               height: 60.0,
               width: 5.0,
             ),
-            RaisedButton(
-              onPressed: () {},
-              color: Color(0xFFFF6F18),
-              child: Text(
-                "ยืนยันรายการ",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: FontStyles().fontFamily,
-                    fontSize: 16),
+            Transform.scale(
+              scale: 1.5,
+              child: Switch(
+                onChanged: toggleSwitch,
+                value: switchControl,
+                activeColor: Colors.green,
+                activeTrackColor: Colors.grey,
+                inactiveThumbColor: Colors.red,
+                inactiveTrackColor: Colors.grey,
               ),
             ),
+            txtStatus(switchControl),
             Container(
               height: 60.0,
               width: 5.0,
