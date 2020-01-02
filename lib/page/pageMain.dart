@@ -1,7 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/model/link_image.dart';
+import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
+import 'package:hew_maii_res/page/list_menu/food_menu.dart';
 import 'package:intl/intl.dart';
 
 class PageMain extends StatefulWidget {
@@ -21,7 +25,8 @@ class _PageMainState extends State<PageMain> {
 
   bool switchControl = false;
   var textHolder = 'Switch is OFF';
-  var _date1;
+
+  var _date1 = "--Time Set--";
 
   void toggleSwitch(bool value) {
     if (switchControl == false) {
@@ -31,7 +36,7 @@ class _PageMainState extends State<PageMain> {
         Timer.periodic(Duration(seconds: 5), (timer) {
           setState(() {
             var now = new DateTime.now();
-            _date1 = DateFormat("d/M/yyyy H:mm").format(now);
+            _date1 = DateFormat("dd/MM/yyyy H:mm").format(now);
             openJob(context);
           });
         });
@@ -51,10 +56,7 @@ class _PageMainState extends State<PageMain> {
 
   Widget txtStatus(bool swithControl) {
     if (swithControl == true) {
-      return Text(
-        "เปิดร้าน OPEN",
-        style: styleOpen,
-      );
+      return Text("เปิดร้าน OPEN", style: styleOpen);
     } else {
       return Text("ปิดร้าน CLOSE", style: styleClose);
     }
@@ -135,150 +137,198 @@ class _PageMainState extends State<PageMain> {
     super.initState();
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text(
+              'แน่ใจหรือไม่ ?',
+              style: TextStyle(fontFamily: FontStyles().fontFamily),
+            ),
+            content: new Text(
+              'คุณต้องการออกจากแอพนี้',
+              style: TextStyle(fontFamily: FontStyles().fontFamily),
+            ),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text(
+                  'ไม่',
+                  style: TextStyle(fontFamily: FontStyles().fontFamily),
+                ),
+              ),
+              new FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                child: new Text(
+                  'ใช่',
+                  style: TextStyle(fontFamily: FontStyles().fontFamily),
+                ),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
-        backgroundColor: Colors.white,
-        title: Text(
-          "จัดการร้านค้า",
-          style: TextStyle(
-              fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(padding: EdgeInsets.zero, children: <Widget>[
-          DrawerHeader(
-            child: Text(
-              "ครัวอินดี้",
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          appBar: AppBar(
+            iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
+            backgroundColor: Colors.white,
+            title: Text(
+              "จัดการร้านค้า",
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: FontStyles().fontFamily,
-                fontSize: 18,
-                shadows: <Shadow>[
-                  Shadow(
-                    offset: Offset(5.0, 5.0),
-                    blurRadius: 5.0,
-                    color: Color(0xFFFF6F18),
-                  ),
-                  Shadow(
-                    offset: Offset(6.0, 6.0),
-                    blurRadius: 8.0,
-                    color: Colors.black,
-                  ),
-                ],
-              ),
+                  fontFamily: FontStyles().fontFamily,
+                  color: Color(0xFFFF6F18)),
             ),
+          ),
+          drawer: Drawer(
+            child: ListView(padding: EdgeInsets.zero, children: <Widget>[
+              DrawerHeader(
+                child: Text(
+                  "ครัวอินดี้",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: FontStyles().fontFamily,
+                    fontSize: 22,
+                    shadows: <Shadow>[
+                      Shadow(
+                        offset: Offset(5.0, 5.0),
+                        blurRadius: 5.0,
+                        color: Color(0xFFFF6F18),
+                      ),
+                      Shadow(
+                        offset: Offset(6.0, 6.0),
+                        blurRadius: 8.0,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          Link().imageMianRestaurent + '/' + "indee.jpg"),
+                      fit: BoxFit.cover),
+                ),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.account_box,
+                  color: Color(0xFFFF6F18),
+                  size: 30,
+                ),
+                title: Text(
+                  'ข้อมูลร้าน',
+                  style: listurgerBar,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailRestaurant(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.assignment,
+                  color: Color(0xFFFF6F18),
+                  size: 30,
+                ),
+                title: Text(
+                  'รายการอาหาร',
+                  style: listurgerBar,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodMenu(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.assessment,
+                  color: Color(0xFFFF6F18),
+                  size: 30,
+                ),
+                title: Text(
+                  'ยอดขายรายวัน',
+                  style: listurgerBar,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Divider(
+                color: Color(0xFFFF6F18),
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.power_settings_new,
+                  color: Color(0xFFFF6F18),
+                  size: 30,
+                ),
+                title: Text(
+                  'ออกจากระบบ (Sign Out)',
+                  style: listurgerBar,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ]),
+          ),
+          body: Container(
+            height: 1000,
             decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
             ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.account_box,
-              color: Color(0xFFFF6F18),
-              size: 30,
-            ),
-            title: Text(
-              'ข้อมูลร้าน',
-              style: listurgerBar,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.assignment,
-              color: Color(0xFFFF6F18),
-              size: 30,
-            ),
-            title: Text(
-              'รายการอาหาร',
-              style: listurgerBar,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.assessment,
-              color: Color(0xFFFF6F18),
-              size: 30,
-            ),
-            title: Text(
-              'ยอดขายรายวัน',
-              style: listurgerBar,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          Divider(
-            color: Color(0xFFFF6F18),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.power_settings_new,
-              color: Color(0xFFFF6F18),
-              size: 30,
-            ),
-            title: Text(
-              'ออกจากระบบ (Sing Out)',
-              style: listurgerBar,
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ]),
-      ),
-      body: Container(
-        height: 1000,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
-        ),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              switchControl ? openJob(context) : closeJob(),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              height: 60.0,
-              width: 5.0,
-            ),
-            Transform.scale(
-              scale: 1.5,
-              child: Switch(
-                onChanged: toggleSwitch,
-                value: switchControl,
-                activeColor: Colors.green,
-                activeTrackColor: Colors.grey,
-                inactiveThumbColor: Colors.red,
-                inactiveTrackColor: Colors.grey,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  switchControl ? openJob(context) : closeJob(),
+                ],
               ),
             ),
-            txtStatus(switchControl),
-            Container(
-              height: 60.0,
-              width: 5.0,
+          ),
+          bottomNavigationBar: BottomAppBar(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: 60.0,
+                  width: 5.0,
+                ),
+                Transform.scale(
+                  scale: 1.5,
+                  child: Switch(
+                    onChanged: toggleSwitch,
+                    value: switchControl,
+                    activeColor: Colors.green,
+                    activeTrackColor: Colors.grey,
+                    inactiveThumbColor: Colors.red,
+                    inactiveTrackColor: Colors.grey,
+                  ),
+                ),
+                txtStatus(switchControl),
+                Container(
+                  height: 60.0,
+                  width: 5.0,
+                ),
+              ],
             ),
-          ],
-        ),
-        color: Colors.white,
-        notchMargin: 8.0,
-      ),
-    );
+            color: Colors.white,
+            notchMargin: 8.0,
+          ),
+        ));
   }
 }
