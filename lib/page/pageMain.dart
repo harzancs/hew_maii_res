@@ -7,6 +7,7 @@ import 'package:hew_maii_res/model/link_image.dart';
 import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
 import 'package:hew_maii_res/page/list_menu/food_menu.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PageMain extends StatefulWidget {
   @override
@@ -27,6 +28,23 @@ class _PageMainState extends State<PageMain> {
   var textHolder = 'Switch is OFF';
 
   var _date1 = "--Time Set--";
+
+  @override
+  void initState() {
+    _getUserPass();
+    if (switchControl == true) {}
+    super.initState();
+  }
+
+  var logRes_name = '', logRes_image = '';
+  _getUserPass() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      logRes_name = prefs.getString('resName_res');
+      logRes_image = prefs.getString('resImage_res');
+      print("Get : " + logRes_name + " , " + logRes_image);
+    });
+  }
 
   void toggleSwitch(bool value) {
     if (switchControl == false) {
@@ -131,12 +149,6 @@ class _PageMainState extends State<PageMain> {
     );
   }
 
-  @override
-  void initState() {
-    if (switchControl == true) {}
-    super.initState();
-  }
-
   Future<bool> _onWillPop() async {
     if (switchControl == true) {
       return (await showDialog(
@@ -158,7 +170,6 @@ class _PageMainState extends State<PageMain> {
                     style: TextStyle(fontFamily: FontStyles().fontFamily),
                   ),
                 ),
-                
               ],
             ),
           )) ??
@@ -202,11 +213,12 @@ class _PageMainState extends State<PageMain> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
+          resizeToAvoidBottomPadding: true,
           appBar: AppBar(
             iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
             backgroundColor: Colors.white,
             title: Text(
-              "จัดการร้านค้า",
+              logRes_name,
               style: TextStyle(
                   fontFamily: FontStyles().fontFamily,
                   color: Color(0xFFFF6F18)),
@@ -216,7 +228,7 @@ class _PageMainState extends State<PageMain> {
             child: ListView(padding: EdgeInsets.zero, children: <Widget>[
               DrawerHeader(
                 child: Text(
-                  "ครัวอินดี้",
+                  logRes_name,
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: FontStyles().fontFamily,
@@ -238,7 +250,7 @@ class _PageMainState extends State<PageMain> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                          Link().imageMianRestaurent + '/' + "indee.jpg"),
+                          Link().imageMianRestaurent + logRes_image),
                       fit: BoxFit.cover),
                 ),
               ),

@@ -1,15 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
-import 'package:hew_maii_res/page/pageMain.dart';
+import 'package:hew_maii_res/server/server.dart';
+import 'package:hew_maii_res/sign/save_login.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   @override
   _SignInState createState() => _SignInState();
-}
-
-class DataLogin {
-  final String username, password, location;
-  const DataLogin({this.username, this.password, this.location});
 }
 
 class _SignInState extends State<SignIn> {
@@ -20,50 +22,37 @@ class _SignInState extends State<SignIn> {
   TextEditingController controlUsername = new TextEditingController();
   TextEditingController controlPassword = new TextEditingController();
 
-  // Future<List> login() async {
-  //   // print(response.body);
-  //   final response = await http.post(Server().addressLogin, body: {
-  //     "username": controlUsername.text,
-  //     "password": controlPassword.text
-  //   });
-  //   var datauser = json.decode(response.body);
-  //   print(response.body);
-  //   var status = "${datauser[0]['status']}";
-  //   if (status == 'false') {
-  //     setState(() {
-  //       Fluttertoast.showToast(
-  //         msg: "ไม่พบข้อมูล",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         backgroundColor: Colors.white,
-  //         textColor: Colors.orange,
-  //         fontSize: 16.0,
-  //       );
-  //     });
-  //   } else {
-  //     var textLocation = "${datauser[0]['cus_location']}";
-  //     setState(() {
-  //       Fluttertoast.showToast(
-  //         msg: "สวัสดี คุณ${datauser[0]['cus_name']} !!!",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.BOTTOM,
-  //         backgroundColor: Colors.white,
-  //         textColor: Colors.orange,
-  //         fontSize: 16.0,
-  //       );
-  //     });
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => MainPageList(
-  //           value: DataLogin(
-  //               username: controlUsername.text, password: controlPassword.text, location:textLocation),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return datauser;
-  // }
+  Future<List> login() async {
+    // print(response.body);
+    final response = await http.post(Server().addressLogin, body: {
+      "username": controlUsername.text,
+      "password": controlPassword.text
+    });
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var status = "${datauser[0]['status']}";
+    if (status == 'false') {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "ไม่พบข้อมูล",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
+    } else {
+      _saveLogin(controlUsername.text, controlPassword.text);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SaveLogin(),
+        ),
+      );
+    }
+    return datauser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,9 +118,16 @@ class _SignInState extends State<SignIn> {
                             children: <Widget>[
                               SizedBox(
                                 height: 50,
-                                child: TextField(
+                                child: TextFormField(
                                   controller: controlUsername,
                                   autofocus: false,
+                                  validator: (val) {
+                                    if(val.isEmpty) {
+                                      return 'กรุณาป้อนข้อมูล';
+                                    }else{
+                                      return null;
+                                    }
+                                  },
                                   style: TextStyle(
                                       fontSize: 18.0,
                                       fontFamily: FontStyles().fontFamily,
@@ -160,10 +156,17 @@ class _SignInState extends State<SignIn> {
                               SizedBox(height: 10.0),
                               SizedBox(
                                 height: 50,
-                                child: TextField(
+                                child: TextFormField(
                                   controller: controlPassword,
                                   obscureText: true,
                                   autofocus: false,
+                                  validator: (val) {
+                                    if(val.isEmpty) {
+                                      return 'กรุณาป้อนข้อมูล';
+                                    }else{
+                                      return null;
+                                    }
+                                  },
                                   style: TextStyle(
                                       fontSize: 18.0,
                                       fontFamily: FontStyles().fontFamily,
@@ -187,6 +190,7 @@ class _SignInState extends State<SignIn> {
                                       hintStyle: TextStyle(
                                           color: Colors.white,
                                           fontFamily: FontStyles().fontFamily)),
+                                          
                                 ),
                               ),
                               SizedBox(height: 5.0),
@@ -206,11 +210,12 @@ class _SignInState extends State<SignIn> {
                                   RaisedButton(
                                     onPressed: () {
                                       if (_formKey.currentState.validate()) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => PageMain()),
-                                        );
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) => PageMain()),
+                                        // );
+                                        login();
                                       }
                                     },
                                     color: Colors.green,
@@ -238,4 +243,10 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+}
+
+Future<String> _saveLogin(String user, String pass) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('resUsername', user);
+  prefs.setString('resPassword', pass);
 }

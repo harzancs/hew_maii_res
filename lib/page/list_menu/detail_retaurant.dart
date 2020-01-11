@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailRestaurant extends StatefulWidget {
   @override
@@ -10,6 +11,37 @@ class DetailRestaurant extends StatefulWidget {
 class _DetailRestaurantState extends State<DetailRestaurant> {
   final TextStyle txtStyle =
       new TextStyle(fontFamily: FontStyles().fontFamily, fontSize: 18);
+
+  @override
+  void initState() {
+    _getUserPass();
+    super.initState();
+  }
+
+  var logRes_name = '',
+      logRes_image = '',
+      logOwn_name = '',
+      logOwn_lastname = '',
+      logID = '';
+  _getUserPass() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      logID = prefs.getString('resUsername');
+      logRes_name = prefs.getString('resName_res');
+      logRes_image = prefs.getString('resImage_res');
+      logOwn_name = prefs.getString('resName_owe');
+      logOwn_lastname = prefs.getString('resLastname_owe');
+      print("Get : " +
+          logRes_name +
+          " , " +
+          logRes_image +
+          " , " +
+          logOwn_name +
+          " , " +
+          logOwn_lastname);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +49,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
           title: Text(
-            "ข้อมูลร้าน : ",
+            "ข้อมูลร้าน : " + logRes_name,
             style: TextStyle(
                 fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
           )),
@@ -49,11 +81,10 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                 topRight: Radius.circular(4.0),
                               ),
                               child: Image.network(
-                                  Link().imageMianRestaurent +
-                                      '/' +
-                                      "indee.jpg",
-                                  width: 430,
+                                  Link().imageMianRestaurent + logRes_image,
+                                  width: 400,
                                   height: 90,
+                                  scale: 1.0,
                                   fit: BoxFit.cover),
                             ),
                             Padding(
@@ -70,11 +101,14 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        "ชื่อร้าน : ",
+                                        "ชื่อร้าน : " + logRes_name,
                                         style: txtStyle,
                                       ),
                                       Text(
-                                        "ผู้บริหาร : ",
+                                        "ผู้บริหาร : " +
+                                            logOwn_name +
+                                            " " +
+                                            logOwn_lastname,
                                         style: txtStyle,
                                       ),
                                       Text(
@@ -123,7 +157,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        "ID ร้าน : ",
+                                        "ID ร้าน : " + logID,
                                         style: txtStyle,
                                       ),
                                       Divider(
@@ -143,11 +177,13 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                           Padding(
                                             padding: EdgeInsets.all(20),
                                           ),
-                                          Text("อย่าเปิดเผย ID",
-                                              style: TextStyle(
-                                                  fontFamily:
-                                                      FontStyles().fontFamily,
-                                                  ),),
+                                          Text(
+                                            "อย่าเปิดเผย ID",
+                                            style: TextStyle(
+                                              fontFamily:
+                                                  FontStyles().fontFamily,
+                                            ),
+                                          ),
                                           Padding(
                                             padding: EdgeInsets.all(20),
                                           ),
