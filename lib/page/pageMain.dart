@@ -213,7 +213,7 @@ class _PageMainState extends State<PageMain> {
     return WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
-          resizeToAvoidBottomPadding: true,
+          resizeToAvoidBottomPadding: false,
           appBar: AppBar(
             iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
             backgroundColor: Colors.white,
@@ -250,7 +250,7 @@ class _PageMainState extends State<PageMain> {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: NetworkImage(
-                          Link().imageMianRestaurent + logRes_image),
+                          Link().imageMianRestaurent + "/" + logRes_image),
                       fit: BoxFit.cover),
                 ),
               ),

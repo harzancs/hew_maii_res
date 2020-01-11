@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
+import 'package:hew_maii_res/page/list_menu/edit_password.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailRestaurant extends StatefulWidget {
@@ -10,7 +11,7 @@ class DetailRestaurant extends StatefulWidget {
 
 class _DetailRestaurantState extends State<DetailRestaurant> {
   final TextStyle txtStyle =
-      new TextStyle(fontFamily: FontStyles().fontFamily, fontSize: 18);
+      new TextStyle(fontFamily: FontStyles().fontFamily, fontSize: 17);
 
   @override
   void initState() {
@@ -18,38 +19,57 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
     super.initState();
   }
 
-  var logRes_name = '',
-      logRes_image = '',
-      logOwn_name = '',
-      logOwn_lastname = '',
-      logID = '';
+  var logResName = '',
+      logResImage = '',
+      logOwnName = '',
+      logOwnLastname = '',
+      logID = '',
+      logResTimeOpen = '',
+      logResTimeClose = '',
+      logResPhone = '',
+      logResDate = '';
   _getUserPass() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       logID = prefs.getString('resUsername');
-      logRes_name = prefs.getString('resName_res');
-      logRes_image = prefs.getString('resImage_res');
-      logOwn_name = prefs.getString('resName_owe');
-      logOwn_lastname = prefs.getString('resLastname_owe');
+      logResName = prefs.getString('resName_res');
+      logResImage = prefs.getString('resImage_res');
+      logOwnName = prefs.getString('resName_owe');
+      logOwnLastname = prefs.getString('resLastname_owe');
+      logResTimeOpen = prefs.getString('resTime_open');
+      logResTimeClose = prefs.getString('resTime_close');
+      logResPhone = prefs.getString('resPhone');
+      logResDate = prefs.getString('resDate');
+      logResTimeOpen = logResTimeOpen.substring(0, 5);
+      logResTimeClose = logResTimeClose.substring(0, 5);
       print("Get : " +
-          logRes_name +
+          logResName +
           " , " +
-          logRes_image +
+          logResImage +
           " , " +
-          logOwn_name +
+          logOwnName +
           " , " +
-          logOwn_lastname);
+          logOwnLastname +
+          "," +
+          logResTimeOpen +
+          " , " +
+          logResTimeClose +
+          " , " +
+          logResPhone +
+          " , " +
+          logResDate);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
           title: Text(
-            "ข้อมูลร้าน : " + logRes_name,
+            "ข้อมูลร้าน : " + logResName,
             style: TextStyle(
                 fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
           )),
@@ -81,11 +101,13 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                 topRight: Radius.circular(4.0),
                               ),
                               child: Image.network(
-                                  Link().imageMianRestaurent + logRes_image,
+                                  Link().imageMianRestaurent +
+                                      '/' +
+                                      logResImage,
+                                  fit: BoxFit.cover,
+                                  height: 100,
                                   width: 400,
-                                  height: 90,
-                                  scale: 1.0,
-                                  fit: BoxFit.cover),
+                                  scale: 1.0),
                             ),
                             Padding(
                               padding: EdgeInsets.all(5),
@@ -101,22 +123,25 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        "ชื่อร้าน : " + logRes_name,
+                                        "ชื่อร้าน : " + logResName,
                                         style: txtStyle,
                                       ),
                                       Text(
                                         "ผู้บริหาร : " +
-                                            logOwn_name +
+                                            logOwnName +
                                             " " +
-                                            logOwn_lastname,
+                                            logOwnLastname,
                                         style: txtStyle,
                                       ),
                                       Text(
-                                        "เวลาเปิดปิด : ",
+                                        "เวลาเปิดปิด : " +
+                                            logResTimeOpen +
+                                            " - " +
+                                            logResTimeClose,
                                         style: txtStyle,
                                       ),
                                       Text(
-                                        "ติดต่อ : ",
+                                        "ติดต่อ : " + logResPhone,
                                         style: txtStyle,
                                       ),
                                       Text(
@@ -188,7 +213,13 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                                             padding: EdgeInsets.all(20),
                                           ),
                                           FlatButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditPassword()));
+                                            },
                                             child: Text(
                                               "..เปลี่ยนรหัสผ่าน..",
                                               style: TextStyle(

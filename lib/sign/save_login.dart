@@ -46,12 +46,26 @@ class _SaveLoginState extends State<SaveLogin> {
         );
       });
     } else {
-      var res_name = '', owe_name = '', owe_lastname = '', res_image = '';
+      var res_name = '',
+          owe_name = '',
+          owe_lastname = '',
+          res_image = '',
+          res_phone = '',
+          res_time_open = '',
+          res_time_close = '',
+          res_date = '',
+          res_location = '';
       res_name = "${datauser[0]['res_name']}";
       owe_name = "${datauser[0]['res_own_name']}";
       owe_lastname = "${datauser[0]['res_own_lastname']}";
       res_image = "${datauser[0]['res_image']}";
-      _saveLogin(res_name, owe_name, owe_lastname, res_image);
+      res_phone = "${datauser[0]['res_phone']}";
+      res_time_open = "${datauser[0]['res_time_open']}";
+      res_time_close = "${datauser[0]['res_time_close']}";
+      res_date = "${datauser[0]['res_date_open']}";
+      res_location = "${datauser[0]['res_location']}";
+      _saveLogin(res_name, owe_name, owe_lastname, res_image, res_phone,
+          res_time_open, res_time_close, res_date, res_location);
 
       Timer(
           Duration(seconds: 5),
@@ -92,13 +106,26 @@ class _SaveLoginState extends State<SaveLogin> {
   }
 }
 
-Future<String> _saveLogin(String res_name, String owe_name, String owe_lastname,
-    String res_image) async {
+Future<String> _saveLogin(
+    String res_name,
+    String owe_name,
+    String owe_lastname,
+    String res_image,
+    String res_phone,
+    String res_time_open,
+    String res_time_close,
+    String res_date,
+    String res_location) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString('resName_res', res_name);
   prefs.setString('resName_owe', owe_name);
   prefs.setString('resLastname_owe', owe_lastname);
   prefs.setString('resImage_res', res_image);
+  prefs.setString('resPhone', res_phone);
+  prefs.setString('resTime_open', res_time_open);
+  prefs.setString('resTime_close', res_time_close);
+  prefs.setString('resDate', res_date);
+  prefs.setString('resDate', res_location);
   print('Shows : ' +
       res_name +
       " ," +
@@ -106,5 +133,16 @@ Future<String> _saveLogin(String res_name, String owe_name, String owe_lastname,
       " ," +
       owe_lastname +
       " ," +
-      res_image);
+      res_image +
+      " ," +
+      res_phone +
+      " ," +
+      res_time_open +
+      " ," +
+      res_time_close +
+      " ," +
+      res_date +
+      " ," +
+      res_location);
+      
 }

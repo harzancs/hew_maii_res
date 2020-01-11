@@ -72,7 +72,6 @@ class _SignInState extends State<SignIn> {
             children: <Widget>[
               Container(
                 width: 1000,
-                height: 380,
                 color: Color(0xFFFF6F18).withOpacity(0.8),
                 child: Stack(
                   children: <Widget>[
@@ -117,14 +116,13 @@ class _SignInState extends State<SignIn> {
                           child: Column(
                             children: <Widget>[
                               SizedBox(
-                                height: 50,
                                 child: TextFormField(
                                   controller: controlUsername,
                                   autofocus: false,
                                   validator: (val) {
-                                    if(val.isEmpty) {
+                                    if (val.isEmpty) {
                                       return 'กรุณาป้อนข้อมูล';
-                                    }else{
+                                    } else {
                                       return null;
                                     }
                                   },
@@ -155,15 +153,14 @@ class _SignInState extends State<SignIn> {
                               ),
                               SizedBox(height: 10.0),
                               SizedBox(
-                                height: 50,
                                 child: TextFormField(
                                   controller: controlPassword,
                                   obscureText: true,
                                   autofocus: false,
                                   validator: (val) {
-                                    if(val.isEmpty) {
+                                    if (val.isEmpty) {
                                       return 'กรุณาป้อนข้อมูล';
-                                    }else{
+                                    } else {
                                       return null;
                                     }
                                   },
@@ -190,7 +187,6 @@ class _SignInState extends State<SignIn> {
                                       hintStyle: TextStyle(
                                           color: Colors.white,
                                           fontFamily: FontStyles().fontFamily)),
-                                          
                                 ),
                               ),
                               SizedBox(height: 5.0),
