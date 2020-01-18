@@ -164,6 +164,7 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
                       )),
                       Card(
                           child: Container(
+                        width: MediaQuery.of(context).size.width * 1,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,

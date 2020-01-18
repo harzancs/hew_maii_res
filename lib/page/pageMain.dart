@@ -124,7 +124,7 @@ class _PageMainState extends State<PageMain> {
             color: Colors.white,
           ),
           Container(
-            height: MediaQuery.of(context).copyWith().size.height * .7,
+            height: MediaQuery.of(context).copyWith().size.height * .715,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
               itemCount: 10,
@@ -157,7 +157,7 @@ class _PageMainState extends State<PageMain> {
                 style: TextStyle(fontFamily: FontStyles().fontFamily),
               ),
               content: new Text(
-                'หากคุณต้องการออกจากแอพนี้ คุณจำเป็นต้อง ปิดร้าน เสียก่อน',
+                'หากคุณต้องการออกจากแอพนี้ คุณจำเป็นต้อง " ปิดร้าน " เสียก่อน',
                 style: TextStyle(fontFamily: FontStyles().fontFamily),
               ),
               actions: <Widget>[
