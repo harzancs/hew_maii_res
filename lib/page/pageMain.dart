@@ -51,14 +51,12 @@ class _PageMainState extends State<PageMain> {
       setState(() {
         switchControl = true;
         textHolder = 'Switch is ON';
-        Timer.periodic(Duration(seconds: 5), (timer) {
           setState(() {
             var now = new DateTime.now();
-            _date1 = DateFormat("dd/MM/yyyy H:mm").format(now);
+            _date1 = DateFormat("dd/MM/yyyy").format(now);
             openJob(context);
           });
         });
-      });
       print('Switch is ON');
       // Put your code here which you want to execute on Switch ON event.
 
@@ -105,7 +103,7 @@ class _PageMainState extends State<PageMain> {
 
   Widget openJob(context) {
     TextStyle txtt = new TextStyle(
-        fontFamily: FontStyles().fontFamily, color: Colors.white, fontSize: 18);
+        fontFamily: FontStyles().fontFamily, color: Colors.white, fontSize: 14);
     return Container(
       height: MediaQuery.of(context).copyWith().size.height * .79,
       width: MediaQuery.of(context).copyWith().size.height * .55,

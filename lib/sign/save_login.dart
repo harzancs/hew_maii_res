@@ -15,14 +15,13 @@ class SaveLogin extends StatefulWidget {
 }
 
 class _SaveLoginState extends State<SaveLogin> {
-  var logUser = '', logPass = '';
+  String logUser = '', logPass = '';
   _getUserPass() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       logUser = prefs.getString('resUsername');
       logPass = prefs.getString('resPassword');
       print("Get : " + logUser + " , " + logPass);
-
       login();
     });
   }
@@ -63,7 +62,7 @@ class _SaveLoginState extends State<SaveLogin> {
       res_time_open = "${datauser[0]['res_time_open']}";
       res_time_close = "${datauser[0]['res_time_close']}";
       res_date = "${datauser[0]['res_date_open']}";
-      res_location = "${datauser[0]['res_location']}";
+      res_location = "${datauser[0]['location_id']}";
       _saveLogin(res_name, owe_name, owe_lastname, res_image, res_phone,
           res_time_open, res_time_close, res_date, res_location);
 
@@ -125,7 +124,7 @@ Future<String> _saveLogin(
   prefs.setString('resTime_open', res_time_open);
   prefs.setString('resTime_close', res_time_close);
   prefs.setString('resDate', res_date);
-  prefs.setString('resDate', res_location);
+  prefs.setString('resLocation', res_location);
   print('Shows : ' +
       res_name +
       " ," +
