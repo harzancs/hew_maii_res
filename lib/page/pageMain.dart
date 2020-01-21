@@ -39,7 +39,9 @@ class _PageMainState extends State<PageMain> {
   @override
   void initState() {
     _getUserPass();
-    if (switchControl == true) {}
+    if (switchControl == true) {
+      openJob(context);
+    }
     super.initState();
   }
 
@@ -73,13 +75,13 @@ class _PageMainState extends State<PageMain> {
   void toggleSwitch(bool value) {
     if (switchControl == false) {
       setState(() {
-        getDBOrder();
         switchControl = true;
         textHolder = 'Switch is ON';
         setState(() {
           var now = new DateTime.now();
           _date1 = DateFormat("dd/MM/yyyy").format(now);
-          openJob(context);
+          new Timer.periodic(
+              Duration(seconds: 5), (Timer t) => openJob(context));
         });
       });
       print('Switch is ON');
@@ -127,6 +129,7 @@ class _PageMainState extends State<PageMain> {
   }
 
   Widget openJob(context) {
+    getDBOrder();
     TextStyle txtt = new TextStyle(
         fontFamily: FontStyles().fontFamily, color: Colors.white, fontSize: 14);
     return Container(
@@ -190,8 +193,12 @@ class _PageMainState extends State<PageMain> {
                                           fontFamily: FontStyles().fontFamily,
                                           fontSize: 26),
                                     ),
-                                    Text("เวลา "+
-                                      listOrder[index].orderTime.substring(11,16)+" นาที",
+                                    Text(
+                                      "เวลา " +
+                                          listOrder[index]
+                                              .orderTime
+                                              .substring(11, 16) +
+                                          " นาที",
                                       style: TextStyle(
                                           fontFamily: FontStyles().fontFamily,
                                           fontSize: 16,
@@ -403,7 +410,9 @@ class _PageMainState extends State<PageMain> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  switchControl ? openJob(context) : closeJob(),
+                  switchControl ? 
+                  
+                  openJob(context) : closeJob(),
                 ],
               ),
             ),
