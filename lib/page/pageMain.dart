@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,8 +7,12 @@ import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
 import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
 import 'package:hew_maii_res/page/list_menu/food_menu.dart';
+import 'package:hew_maii_res/page/model/list_order.dart';
+import 'package:hew_maii_res/server/server.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
 
 class PageMain extends StatefulWidget {
   @override
@@ -29,6 +34,8 @@ class _PageMainState extends State<PageMain> {
 
   var _date1 = "--Time Set--";
 
+  var listOrder = new List<ListOrder>();
+
   @override
   void initState() {
     _getUserPass();
@@ -36,27 +43,45 @@ class _PageMainState extends State<PageMain> {
     super.initState();
   }
 
-  var logRes_name = '', logRes_image = '';
+  var logRes_name = '', logRes_image = '', logID = '';
   _getUserPass() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
+      logID = prefs.getString('resUsername');
       logRes_name = prefs.getString('resName_res');
       logRes_image = prefs.getString('resImage_res');
       print("Get : " + logRes_name + " , " + logRes_image);
     });
   }
 
+  Future<List> getDBOrder() async {
+    // print(response.body);
+    final response = await http.post(Server().getOrderRes, body: {
+      "username": logID,
+    });
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var txtstatus = "${datauser[0]['status']}";
+    if (txtstatus != 'false') {
+      Iterable listOrderRes = json.decode(response.body);
+      listOrder =
+          listOrderRes.map((model) => ListOrder.fromJson(model)).toList();
+    }
+    return datauser;
+  }
+
   void toggleSwitch(bool value) {
     if (switchControl == false) {
       setState(() {
+        getDBOrder();
         switchControl = true;
         textHolder = 'Switch is ON';
-          setState(() {
-            var now = new DateTime.now();
-            _date1 = DateFormat("dd/MM/yyyy").format(now);
-            openJob(context);
-          });
+        setState(() {
+          var now = new DateTime.now();
+          _date1 = DateFormat("dd/MM/yyyy").format(now);
+          openJob(context);
         });
+      });
       print('Switch is ON');
       // Put your code here which you want to execute on Switch ON event.
 
@@ -117,7 +142,8 @@ class _PageMainState extends State<PageMain> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text("วันที่ $_date1", style: txtt),
-              Text("รวม 100 รายการ", style: txtt),
+              Text("รวม " + listOrder.length.toString() + " รายการ",
+                  style: txtt),
             ],
           ),
           Divider(
@@ -127,7 +153,7 @@ class _PageMainState extends State<PageMain> {
             height: MediaQuery.of(context).copyWith().size.height * .715,
             child: ListView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: 10,
+              itemCount: listOrder.length,
               shrinkWrap: true,
               itemBuilder: (contant, index) {
                 return Container(
@@ -135,7 +161,52 @@ class _PageMainState extends State<PageMain> {
                   child: Card(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[Text(index.toString())],
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(5),
+                                ),
+                                Text(
+                                  "OR" + listOrder[index].orderID,
+                                  style: TextStyle(
+                                      fontFamily: FontStyles().fontFamily,
+                                      fontSize: 50,
+                                      color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Text(
+                                      listOrder[index].orderPrice + ' ฿',
+                                      style: TextStyle(
+                                          fontFamily: FontStyles().fontFamily,
+                                          fontSize: 26),
+                                    ),
+                                    Text("เวลา "+
+                                      listOrder[index].orderTime.substring(11,16)+" นาที",
+                                      style: TextStyle(
+                                          fontFamily: FontStyles().fontFamily,
+                                          fontSize: 16,
+                                          color: Colors.grey),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.all(5),
+                                )
+                              ],
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                 );
