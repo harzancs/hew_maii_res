@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/page/list_menu/food_detail.dart';
 import 'package:hew_maii_res/page/list_menu/model/list_food.dart';
 import 'package:hew_maii_res/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +91,11 @@ class _FoodMenuState extends State<FoodMenu> {
     return Container(
         child: Column(
       children: <Widget>[
-        Text(listFoodMenu.length.toString()),
+        Text(
+          "จำนวน " + listFoodMenu.length.toString() + " เมนู",
+          style: TextStyle(
+              fontFamily: FontStyles().fontFamily, color: Colors.white),
+        ),
         Container(
           color: Colors.white,
           height: MediaQuery.of(context).size.height * 0.75,
@@ -101,30 +106,42 @@ class _FoodMenuState extends State<FoodMenu> {
             itemCount: listFoodMenu.length,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Container(
-                height: 55,
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              " " + listFoodMenu[index].foodName,
-                              style: titleFood,
-                            ),
-                            Text(
-                              "  " + listFoodMenu[index].foodPrice + " บาท",
-                              style: titleFoodPrice,
-                            ),
-                          ],
-                        ),
-                        statusFood(listFoodMenu[index].foodUsing.toString()),
-                      ],
-                    )
-                  ],
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodDetail(
+                        id: listFoodMenu[index].foodId,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 55,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                " " + listFoodMenu[index].foodName,
+                                style: titleFood,
+                              ),
+                              Text(
+                                "  " + listFoodMenu[index].foodPrice + " บาท",
+                                style: titleFoodPrice,
+                              ),
+                            ],
+                          ),
+                          statusFood(listFoodMenu[index].foodUsing.toString()),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             },

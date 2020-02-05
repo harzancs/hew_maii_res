@@ -30,7 +30,9 @@ class _SignInState extends State<SignIn> {
     });
     var datauser = json.decode(response.body);
     print(response.body);
-    var status = "${datauser[0]['status']}";
+    var status;
+    status = "${datauser[0]['status']}";
+    
     if (status == 'false') {
       setState(() {
         Fluttertoast.showToast(
@@ -42,7 +44,7 @@ class _SignInState extends State<SignIn> {
           fontSize: 16.0,
         );
       });
-    } else {
+    } else if (status != 'false') {
       _saveLogin(controlUsername.text, controlPassword.text);
       Navigator.push(
         context,

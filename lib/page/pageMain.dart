@@ -80,8 +80,8 @@ class _PageMainState extends State<PageMain> {
         setState(() {
           var now = new DateTime.now();
           _date1 = DateFormat("dd/MM/yyyy").format(now);
-          new Timer.periodic(
-              Duration(seconds: 5), (Timer t) => openJob(context));
+          // new Timer.periodic(
+          //     Duration(seconds: 5), (Timer t) => openJob(context));
         });
       });
       print('Switch is ON');
