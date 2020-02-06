@@ -10,12 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FoodDetail extends StatefulWidget {
   final String id;
-  FoodDetail({Key key, @required this.id}) : super(key: key);
+  final String foodname;
+  FoodDetail({Key key, @required this.id, this.foodname}) : super(key: key);
   @override
   _FoodDetailState createState() => _FoodDetailState();
 }
 
 class _FoodDetailState extends State<FoodDetail> {
+  final _formKey = GlobalKey<FormState>();
   var logID = '';
   var listFoodDetailMenu = new List<DataFoodDetail>();
 
@@ -48,7 +50,6 @@ class _FoodDetailState extends State<FoodDetail> {
   @override
   void initState() {
     _getDataLocal();
-
     super.initState();
   }
 
@@ -59,17 +60,29 @@ class _FoodDetailState extends State<FoodDetail> {
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
           title: Text(
-            listFoodDetailMenu[0].foodName,
+            widget.foodname,
             style: TextStyle(
                 fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
           )),
       body: Container(
-          height: 1000,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
-          ),
-          child: Center()),
+        height: 1000,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
+        ),
+        child: Center(
+            child: Container(
+                width: MediaQuery.of(context).size.width * .9,
+                height: MediaQuery.of(context).size.height * .7,
+                color: Colors.white,
+                child: Form(
+                    key: _formKey,
+                    child: Column(children: <Widget>[
+                      SizedBox(
+                        child: TextFormField(),
+                      )
+                    ])))),
+      ),
     );
   }
 }

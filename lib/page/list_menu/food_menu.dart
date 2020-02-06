@@ -113,6 +113,7 @@ class _FoodMenuState extends State<FoodMenu> {
                     MaterialPageRoute(
                       builder: (context) => FoodDetail(
                         id: listFoodMenu[index].foodId,
+                        foodname: listFoodMenu[index].foodName,
                       ),
                     ),
                   );
