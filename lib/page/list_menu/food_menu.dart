@@ -98,7 +98,7 @@ class _FoodMenuState extends State<FoodMenu> {
         ),
         Container(
           color: Colors.white,
-          height: MediaQuery.of(context).size.height * 0.75,
+          height: MediaQuery.of(context).size.height * 0.8,
           width: MediaQuery.of(context).size.width * 0.87,
           child: ListView.separated(
             physics: BouncingScrollPhysics(),
@@ -166,6 +166,7 @@ class _FoodMenuState extends State<FoodMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
@@ -184,7 +185,13 @@ class _FoodMenuState extends State<FoodMenu> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(10)),
-                status ? _slideMenuFood() : _noFood(),
+                Container(
+                    width: MediaQuery.of(context).copyWith().size.height * .55,
+                    child: Column(
+                      children: <Widget>[
+                        status ? _slideMenuFood() : _noFood(),
+                      ],
+                    ))
               ],
             ),
           )),

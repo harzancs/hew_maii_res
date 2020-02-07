@@ -21,6 +21,10 @@ class _FoodDetailState extends State<FoodDetail> {
   var logID = '';
   var listFoodDetailMenu = new List<DataFoodDetail>();
 
+  //---------------
+  TextEditingController controlNamefood = new TextEditingController();
+  //---------------
+
   _getDataLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -42,6 +46,7 @@ class _FoodDetailState extends State<FoodDetail> {
         listFoodDetailMenu = listFoodDetail
             .map((model) => DataFoodDetail.fromJson(model))
             .toList();
+        controlNamefood.text = listFoodDetailMenu[0].foodName;
       });
     }
     return datauser;
@@ -56,6 +61,7 @@ class _FoodDetailState extends State<FoodDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomPadding: false,
       appBar: AppBar(
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
@@ -65,24 +71,87 @@ class _FoodDetailState extends State<FoodDetail> {
                 fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
           )),
       body: Container(
-        height: 1000,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
-        ),
-        child: Center(
-            child: Container(
-                width: MediaQuery.of(context).size.width * .9,
-                height: MediaQuery.of(context).size.height * .7,
-                color: Colors.white,
-                child: Form(
-                    key: _formKey,
-                    child: Column(children: <Widget>[
-                      SizedBox(
-                        child: TextFormField(),
-                      )
-                    ])))),
-      ),
+          height: 1000,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
+          ),
+          child: SingleChildScrollView(
+            child: Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                    ),
+                    Card(
+                        child: Container(
+                      color: Colors.white,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: Form(
+                          child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            child: Padding(padding: EdgeInsets.all(5)),
+                          ),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                          SizedBox(
+                              child: TextFormField(
+                            controller: controlNamefood,
+                          )),
+                        ],
+                      )),
+                    ))
+                  ],
+                ),
+              ),
+            ),
+          )),
     );
   }
 }
