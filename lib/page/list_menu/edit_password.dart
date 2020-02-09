@@ -106,19 +106,6 @@ class _EditPasswordState extends State<EditPassword> {
                                             filled: true,
                                             fillColor: Color(0xFFFF6F18)
                                                 .withOpacity(0.4),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFFFF6F18)
-                                                        .withOpacity(0.7)),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFFFF6F18)
-                                                      .withOpacity(1)),
-                                              borderRadius:
-                                                  BorderRadius.circular(9.0),
-                                            ),
                                             hintText: 'รหัสเดิม',
                                             hintStyle: TextStyle(
                                                 color: Colors.white,
@@ -143,19 +130,6 @@ class _EditPasswordState extends State<EditPassword> {
                                             filled: true,
                                             fillColor: Color(0xFFFF6F18)
                                                 .withOpacity(0.4),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFFFF6F18)
-                                                        .withOpacity(0.7)),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFFFF6F18)
-                                                      .withOpacity(1)),
-                                              borderRadius:
-                                                  BorderRadius.circular(9.0),
-                                            ),
                                             hintText: 'รหัสใหม่',
                                             hintStyle: TextStyle(
                                                 color: Colors.white,
@@ -182,24 +156,12 @@ class _EditPasswordState extends State<EditPassword> {
                                             filled: true,
                                             fillColor: Color(0xFFFF6F18)
                                                 .withOpacity(0.4),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFFFF6F18)
-                                                        .withOpacity(0.7)),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Color(0xFFFF6F18)
-                                                      .withOpacity(1)),
-                                              borderRadius:
-                                                  BorderRadius.circular(9.0),
-                                            ),
                                             hintText: 'ยืนยันรหัสใหม่',
                                             hintStyle: TextStyle(
                                                 color: Colors.white,
                                                 fontFamily:
-                                                    FontStyles().fontFamily,fontSize: 16)),
+                                                    FontStyles().fontFamily,
+                                                fontSize: 16)),
                                       ),
                                     ),
                                     SizedBox(height: 10.0),
