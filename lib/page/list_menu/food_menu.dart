@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/page/list_menu/food_add.dart';
 import 'package:hew_maii_res/page/list_menu/food_detail.dart';
 import 'package:hew_maii_res/page/list_menu/model/list_food.dart';
+import 'package:hew_maii_res/page/pageMain.dart';
 import 'package:hew_maii_res/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -168,13 +169,40 @@ class _FoodMenuState extends State<FoodMenu> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-          iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
-          backgroundColor: Colors.white,
-          title: Text(
-            "รายการอาหาร",
-            style: TextStyle(
-                fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
-          )),
+        iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PageMain(),
+              ),
+            );
+          },
+          child: Icon(
+            Icons.arrow_back, // add custom icons also
+          ),
+        ),
+        title: Text(
+          "รายการอาหาร",
+          style: TextStyle(
+              fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
+        ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FoodAdd(),
+                ),
+              );
+            },
+            icon: Icon(Icons.add),
+          )
+        ],
+      ),
       body: Container(
           height: 1000,
           decoration: BoxDecoration(

@@ -234,6 +234,14 @@ class _FoodDetailState extends State<FoodDetail> {
       appBar: AppBar(
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                fecthEdit();
+              },
+              icon: Icon(Icons.save),
+            )
+          ],
           title: Text(
             widget.foodname,
             style: TextStyle(
@@ -303,6 +311,7 @@ class _FoodDetailState extends State<FoodDetail> {
                                     ),
                                     SizedBox(
                                         child: TextFormField(
+                                            keyboardType: TextInputType.number,
                                             controller: controlPricefood,
                                             autofocus: false,
                                             // validator: () {},
@@ -344,23 +353,6 @@ class _FoodDetailState extends State<FoodDetail> {
                                               inactiveTrackColor: Colors.grey,
                                             ),
                                           ),
-                                        ]),
-                                    Divider(),
-                                    Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(''),
-                                          RaisedButton(
-                                              color: Colors.green,
-                                              onPressed: () {
-                                                fecthEdit();
-                                              },
-                                              child: Text(
-                                                "บันทึก",
-                                                style: titleTextBTDelete,
-                                              )),
-                                          Text(''),
                                         ]),
                                     SizedBox(
                                       child:
