@@ -8,6 +8,7 @@ import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
 import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
 import 'package:hew_maii_res/page/list_menu/food_menu.dart';
+import 'package:hew_maii_res/page/list_menu/order/order_detail.dart';
 import 'package:hew_maii_res/page/model/list_order.dart';
 import 'package:hew_maii_res/server/server.dart';
 import 'package:hew_maii_res/sign/sign_out.dart';
@@ -161,7 +162,15 @@ class _PageMainState extends State<PageMain> {
                   height: 100,
                   child: Card(
                       child: InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetail(
+                              idOrder: listOrder[index].orderID.toString()),
+                        ),
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
