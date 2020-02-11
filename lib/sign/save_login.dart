@@ -53,7 +53,8 @@ class _SaveLoginState extends State<SaveLogin> {
           res_time_open = '',
           res_time_close = '',
           res_date = '',
-          res_location = '';
+          res_location = '',
+          res_status = '';
       res_name = "${datauser[0]['res_name']}";
       owe_name = "${datauser[0]['res_own_name']}";
       owe_lastname = "${datauser[0]['res_own_lastname']}";
@@ -63,8 +64,9 @@ class _SaveLoginState extends State<SaveLogin> {
       res_time_close = "${datauser[0]['res_time_close']}";
       res_date = "${datauser[0]['res_date_open']}";
       res_location = "${datauser[0]['location_id']}";
+      res_status = "${datauser[0]['res_status']}";
       _saveLogin(res_name, owe_name, owe_lastname, res_image, res_phone,
-          res_time_open, res_time_close, res_date, res_location);
+          res_time_open, res_time_close, res_date, res_location, res_status);
 
       Timer(
           Duration(seconds: 5),
@@ -114,7 +116,8 @@ Future<String> _saveLogin(
     String res_time_open,
     String res_time_close,
     String res_date,
-    String res_location) async {
+    String res_location,
+    String res_status) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString('resName_res', res_name);
   prefs.setString('resName_owe', owe_name);
@@ -125,6 +128,7 @@ Future<String> _saveLogin(
   prefs.setString('resTime_close', res_time_close);
   prefs.setString('resDate', res_date);
   prefs.setString('resLocation', res_location);
+  prefs.setString('resStatus', res_status);
   print('Shows : ' +
       res_name +
       " ," +
@@ -142,6 +146,7 @@ Future<String> _saveLogin(
       " ," +
       res_date +
       " ," +
-      res_location);
-      
+      res_location +
+      " ," +
+      res_status);
 }

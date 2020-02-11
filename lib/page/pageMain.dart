@@ -39,15 +39,32 @@ class _PageMainState extends State<PageMain> {
 
   var listOrder = new List<ListOrder>();
 
-  var logRes_name = '', logRes_image = '', logID = '';
+  var logRes_name = '', logRes_image = '', logID = '', logStatus = '';
   _getUserPass() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       logID = prefs.getString('resUsername');
       logRes_name = prefs.getString('resName_res');
       logRes_image = prefs.getString('resImage_res');
-      print("Get : " + logRes_name + " , " + logRes_image);
+      logStatus = prefs.getString('resStatus');
+      print("Get : " + logRes_name + " , " + logRes_image + " , " + logStatus);
+      if (logStatus == '0') {
+        switchControl = false;
+      } else {
+        switchControl = true;
+        setState(() {
+          var now = new DateTime.now();
+          setState(() {
+            _date1 = DateFormat("dd/MM/yyyy").format(now);
+          });
+        });
+      }
     });
+  }
+
+  _pushUserPass(String statusRes) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("resStatus", statusRes);
   }
 
   Future<List> getDBOrder() async {
@@ -68,14 +85,47 @@ class _PageMainState extends State<PageMain> {
     return datauser;
   }
 
+  Future<List> getResTimer(String statusRes) async {
+    // print(response.body);
+    final response = await http.post(Server().changeStatus,
+        body: {"username": logID, "status": statusRes});
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var txtstatus = "${datauser[0]['status']}";
+    if (txtstatus == 'true') {
+      setState(() {
+        setState(() {
+          var now = new DateTime.now();
+          setState(() {
+            _date1 = DateFormat("dd/MM/yyyy").format(now);
+          });
+        });
+        Fluttertoast.showToast(
+          msg: "เปิดร้าน",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
+    } else if (txtstatus == 'false') {}
+    return datauser;
+  }
+
   void toggleSwitch(bool value) {
     if (switchControl == false) {
       setState(() {
+        getResTimer('1');
+        _pushUserPass('1');
         switchControl = true;
         textHolder = 'Switch is ON';
         setState(() {
           var now = new DateTime.now();
-          _date1 = DateFormat("dd/MM/yyyy").format(now);
+          setState(() {
+            _date1 = DateFormat("dd/MM/yyyy").format(now);
+          });
+
           // new Timer.periodic(
           //     Duration(seconds: 5), (Timer t) => openJob(context));
         });
@@ -85,6 +135,8 @@ class _PageMainState extends State<PageMain> {
 
     } else {
       setState(() {
+        getResTimer('0');
+        _pushUserPass('0');
         switchControl = false;
         textHolder = 'Switch is OFF';
       });
@@ -97,6 +149,16 @@ class _PageMainState extends State<PageMain> {
     if (swithControl == true) {
       return Text("เปิดร้าน OPEN", style: styleOpen);
     } else {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "ปิดร้าน",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
       return Text("ปิดร้าน CLOSE", style: styleClose);
     }
   }
@@ -163,17 +225,29 @@ class _PageMainState extends State<PageMain> {
                   child: Card(
                       child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrderDetail(
-                              idOrder: listOrder[index].orderID.toString(),
-                              orderPrice:
-                                  listOrder[index].orderPrice.toString(),
-                                  orderOther:
-                                  listOrder[index].orderOther),
-                        ),
-                      );
+                      if (listOrder[index].orderStatus.toString() == '1') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OrderDetail(
+                                idOrder: listOrder[index].orderID.toString(),
+                                orderPrice:
+                                    listOrder[index].orderPrice.toString(),
+                                orderOther: listOrder[index].orderOther),
+                          ),
+                        );
+                      } else {
+                        setState(() {
+                          Fluttertoast.showToast(
+                            msg: "ออเดอร์นี้ถูกจัดการเรียบร้อยแล้ว",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.white,
+                            textColor: Colors.orange,
+                            fontSize: 16.0,
+                          );
+                        });
+                      }
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -335,6 +409,9 @@ class _PageMainState extends State<PageMain> {
   void initState() {
     _getUserPass();
     if (switchControl == true) {
+      // Timer(Duration(seconds: 2), () {
+      //   openJob(context);
+      // });
       openJob(context);
     }
     super.initState();

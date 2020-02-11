@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/page/list_menu/order/model/list_orderDetail.dart';
+import 'package:hew_maii_res/page/list_menu/order/qr_code_order.dart';
 import 'package:hew_maii_res/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -64,6 +65,95 @@ class _OrderDetailState extends State<OrderDetail> {
     return datauser;
   }
 
+  //----------
+  bool hideButton1 = true;
+  bool hideButton2 = false;
+  //----------
+
+  void _showDialogAcceptOrder() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("ยืนยันรับออเดอร์ ?",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          content: new Text(
+              "รหัสออเดอร์ OR" +
+                  widget.idOrder +
+                  " \nราคารวม " +
+                  (int.parse(widget.orderPrice) - 30).toString() +
+                  " บาท",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("ปิด",
+                  style: TextStyle(fontFamily: FontStyles().fontFamily)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new RaisedButton(
+                child: new Text(
+                  "ตกลง",
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: FontStyles().fontFamily),
+                ),
+                onPressed: () {
+                  setState(() {
+                    hideButton1 = false;
+                    hideButton2 = true;
+                  });
+                  Navigator.of(context).pop();
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDialogCancelOrder() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("ยกเลิกออเดอร์ ?",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          content: new Text(
+              "รหัสออเดอร์ OR" +
+                  widget.idOrder +
+                  " \nราคารวม " +
+                  (int.parse(widget.orderPrice) - 30).toString() +
+                  " บาท",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("ปิด",
+                  style: TextStyle(fontFamily: FontStyles().fontFamily)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new RaisedButton(
+                child: new Text(
+                  "ตกลง",
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: FontStyles().fontFamily),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     _getDataLocal();
@@ -75,121 +165,218 @@ class _OrderDetailState extends State<OrderDetail> {
     return Scaffold(
       // resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-          iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
-          backgroundColor: Colors.white,
-          title: Text(
-            "OR" + widget.idOrder,
-            style: TextStyle(
-                fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
-          )),
+        iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
+        backgroundColor: Colors.white,
+        title: Text(
+          "OR" + widget.idOrder,
+          style: TextStyle(
+              fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
+        ),
+        actions: <Widget>[
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return <PopupMenuEntry<String>>[
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: ListTile(
+                    title: Text("ยกเลิกออเดอร์นี้",
+                        style: TextStyle(
+                          fontFamily: FontStyles().fontFamily,
+                          fontSize: 16,
+                        )),
+                    leading: Icon(Icons.delete),
+                    onTap: () {
+                      _showDialogCancelOrder();
+                    },
+                  ),
+                )
+              ];
+            },
+            icon: Icon(
+              Icons.more_vert,
+              size: 30,
+              color: Color(0xFFFF6F18),
+            ),
+          )
+        ],
+      ),
       body: Container(
-          height: 1000,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
-          ),
-          child: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(5),
+        height: 1000,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/bg/bg_1.jpg'), fit: BoxFit.cover),
+        ),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(5),
+                  ),
+                  Card(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.85,
+                      child: Column(children: <Widget>[
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Column(
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.all(5)),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      " รายการ",
+                                      style: texttitle,
+                                    ),
+                                    Text(
+                                      "จำนวน",
+                                      style: texttitle,
+                                    ),
+                                  ],
+                                ),
+                                Divider(color: Color(0xFFFF6F18)),
+                                ListView.builder(
+                                    itemCount: listOrderDetail.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (contant, index) {
+                                      return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text(
+                                              listOrderDetail[index].foodName,
+                                              style: textshow,
+                                            ),
+                                            Text(
+                                              listOrderDetail[index].foodNum +
+                                                  " ",
+                                              style: textshow,
+                                            ),
+                                          ]);
+                                    }),
+                                Divider(color: Color(0xFFFF6F18)),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      "เงินที่ได้รับ",
+                                      style: texttotal,
+                                    ),
+                                    Text(
+                                      (int.parse(widget.orderPrice) - 30)
+                                              .toString() +
+                                          " ฿",
+                                      style: texttotal,
+                                    )
+                                  ],
+                                ),
+                                Divider(color: Color(0xFFFF6F18)),
+                              ],
+                            ))
+                      ]),
                     ),
-                    Card(
-                      child: Container(
+                  ),
+                  Card(
+                    child: Container(
                         width: MediaQuery.of(context).size.width * 0.85,
                         child: Column(children: <Widget>[
                           Container(
                               width: MediaQuery.of(context).size.width * 0.8,
                               child: Column(
-                                children: <Widget>[
-                                  Padding(padding: EdgeInsets.all(5)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        " รายการ",
-                                        style: texttitle,
-                                      ),
-                                      Text(
-                                        "จำนวน",
-                                        style: texttitle,
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(color: Color(0xFFFF6F18)),
-                                  ListView.builder(
-                                      itemCount: listOrderDetail.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (contant, index) {
-                                        return Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Text(
-                                                listOrderDetail[index].foodName,
-                                                style: textshow,
-                                              ),
-                                              Text(
-                                                listOrderDetail[index].foodNum +
-                                                    " ",
-                                                style: textshow,
-                                              ),
-                                            ]);
-                                      }),
-                                  Divider(color: Color(0xFFFF6F18)),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Text(
-                                        "เงินที่ได้รับ",
-                                        style: texttotal,
-                                      ),
-                                      Text(
-                                        (int.parse(widget.orderPrice) - 30)
-                                                .toString() +
-                                            " ฿",
-                                        style: texttotal,
-                                      )
-                                    ],
-                                  ),
-                                  Divider(color: Color(0xFFFF6F18)),
-                                ],
-                              ))
-                        ]),
-                      ),
-                    ),
-                    Card(
-                      child: Container(
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          child: Column(children: <Widget>[
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(padding: EdgeInsets.all(5)),
-                                      Text("เพิ่มเติมถึงร้านค้า",
-                                          style: texttitle),
-                                      Text(
-                                        " " + widget.orderOther,
-                                        style: textshow,
-                                      ),
-                                      Padding(padding: EdgeInsets.all(5)),
-                                    ]))
-                          ])),
-                    ),
-                    Padding(padding: EdgeInsets.all(10)),
-                  ],
-                ),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(padding: EdgeInsets.all(5)),
+                                    Text("เพิ่มเติมถึงร้านค้า",
+                                        style: texttitle),
+                                    Text(
+                                      " " + widget.orderOther,
+                                      style: textshow,
+                                    ),
+                                    Padding(padding: EdgeInsets.all(5)),
+                                  ]))
+                        ])),
+                  ),
+                  Padding(padding: EdgeInsets.all(5)),
+                ],
               ),
             ),
-          )),
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              height: 50.0,
+              width: 5.0,
+            ),
+            Visibility(
+                visible: hideButton1,
+                child: FlatButton.icon(
+                  onPressed: () {
+                    _showDialogAcceptOrder();
+
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         ReceiveQRcode(idOrder: widget.idOrder, resId: logID),
+                    //   ),
+                    // );
+                  },
+                  icon: Icon(
+                    Icons.local_dining,
+                    color: Color(0xFFFF6F18),
+                  ),
+                  label: Text(
+                    "รับออเดอร์นี้",
+                    style: TextStyle(
+                      fontFamily: FontStyles().fontFamily,
+                      fontSize: 16,
+                      color: Color(0xFFFF6F18),
+                    ),
+                  ),
+                )),
+            Visibility(
+                visible: hideButton2,
+                child: FlatButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReceiveQRcode(
+                            idOrder: widget.idOrder, resId: logID),
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    Icons.motorcycle,
+                    color: Color(0xFFFF6F18),
+                  ),
+                  label: Text(
+                    "ส่งมอบอาหาร",
+                    style: TextStyle(
+                      fontFamily: FontStyles().fontFamily,
+                      fontSize: 16,
+                      color: Color(0xFFFF6F18),
+                    ),
+                  ),
+                )),
+            Container(
+              height: 50.0,
+              width: 5.0,
+            ),
+          ],
+        ),
+        color: Colors.white,
+        notchMargin: 8.0,
+      ),
     );
   }
 }

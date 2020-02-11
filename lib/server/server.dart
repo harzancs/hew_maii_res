@@ -19,6 +19,9 @@ class Server {
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiUpdatePasswordRes.php";
   String addFood =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiPushNewFood.php";
-
+  String changeStatus =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiPushStatusRes.php";
+  String dataDriverOrder =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetDriverOrder.php";
   Server() : super();
 }

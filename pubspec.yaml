@@ -23,6 +23,7 @@ dependencies:
   http:
   intl: ^0.15.8
   shared_preferences: any
+  qr_flutter: ^3.0.1
   flutter: 
     sdk: flutter
 
