@@ -7,6 +7,8 @@ class Server {
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetFoodMenu.php";
   String getOrderRes =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetOrderRes.php";
+  String getOrderDetail =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetOrderDetail.php";
   String getFoodDetail =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetFoodDetail.php";
   String deleteFood =

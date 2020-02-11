@@ -167,7 +167,11 @@ class _PageMainState extends State<PageMain> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => OrderDetail(
-                              idOrder: listOrder[index].orderID.toString()),
+                              idOrder: listOrder[index].orderID.toString(),
+                              orderPrice:
+                                  listOrder[index].orderPrice.toString(),
+                                  orderOther:
+                                  listOrder[index].orderOther),
                         ),
                       );
                     },
