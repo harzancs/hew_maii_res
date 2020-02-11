@@ -13,6 +13,10 @@ class Server {
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiDeleteFoodRes.php";
   String updateFood =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiUpdateFoodRes.php";
+  String updatePassword =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiUpdatePasswordRes.php";
+  String addFood =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiPushNewFood.php";
 
   Server() : super();
 }

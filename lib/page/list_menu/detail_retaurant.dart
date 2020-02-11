@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
 import 'package:hew_maii_res/page/list_menu/edit_password.dart';
+import 'package:hew_maii_res/page/pageMain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DetailRestaurant extends StatefulWidget {
@@ -68,6 +69,19 @@ class _DetailRestaurantState extends State<DetailRestaurant> {
       appBar: AppBar(
           iconTheme: new IconThemeData(color: Color(0xFFFF6F18)),
           backgroundColor: Colors.white,
+          leading: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PageMain(),
+                ),
+              );
+            },
+            child: Icon(
+              Icons.arrow_back, // add custom icons also
+            ),
+          ),
           title: Text(
             "ข้อมูลร้าน : " + logResName,
             style: TextStyle(

@@ -3,12 +3,15 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
 import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
 import 'package:hew_maii_res/page/list_menu/food_menu.dart';
+import 'package:hew_maii_res/page/list_menu/order/order_detail.dart';
 import 'package:hew_maii_res/page/model/list_order.dart';
 import 'package:hew_maii_res/server/server.dart';
+import 'package:hew_maii_res/sign/sign_out.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,15 +39,6 @@ class _PageMainState extends State<PageMain> {
 
   var listOrder = new List<ListOrder>();
 
-  @override
-  void initState() {
-    _getUserPass();
-    if (switchControl == true) {
-      openJob(context);
-    }
-    super.initState();
-  }
-
   var logRes_name = '', logRes_image = '', logID = '';
   _getUserPass() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -65,9 +59,11 @@ class _PageMainState extends State<PageMain> {
     print(response.body);
     var txtstatus = "${datauser[0]['status']}";
     if (txtstatus != 'false') {
-      Iterable listOrderRes = json.decode(response.body);
-      listOrder =
-          listOrderRes.map((model) => ListOrder.fromJson(model)).toList();
+      setState(() {
+        Iterable listOrderRes = json.decode(response.body);
+        listOrder =
+            listOrderRes.map((model) => ListOrder.fromJson(model)).toList();
+      });
     }
     return datauser;
   }
@@ -129,7 +125,10 @@ class _PageMainState extends State<PageMain> {
   }
 
   Widget openJob(context) {
-    getDBOrder();
+    setState(() {
+      getDBOrder();
+    });
+
     TextStyle txtt = new TextStyle(
         fontFamily: FontStyles().fontFamily, color: Colors.white, fontSize: 14);
     return Container(
@@ -162,6 +161,16 @@ class _PageMainState extends State<PageMain> {
                 return Container(
                   height: 100,
                   child: Card(
+                      child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetail(
+                              idOrder: listOrder[index].orderID.toString()),
+                        ),
+                      );
+                    },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -177,7 +186,7 @@ class _PageMainState extends State<PageMain> {
                                   "OR" + listOrder[index].orderID,
                                   style: TextStyle(
                                       fontFamily: FontStyles().fontFamily,
-                                      fontSize: 50,
+                                      fontSize: 34,
                                       color: Colors.grey),
                                 ),
                               ],
@@ -215,7 +224,7 @@ class _PageMainState extends State<PageMain> {
                         )
                       ],
                     ),
-                  ),
+                  )),
                 );
               },
             ),
@@ -282,6 +291,49 @@ class _PageMainState extends State<PageMain> {
           )) ??
           false;
     }
+  }
+
+  void _showDialogSignOut() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("ต้องการออกจากระบบ ?",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("ปิด",
+                  style: TextStyle(fontFamily: FontStyles().fontFamily)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new RaisedButton(
+                child: new Text(
+                  "ตกลง",
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: FontStyles().fontFamily),
+                ),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SignOutRes()));
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    _getUserPass();
+    if (switchControl == true) {
+      openJob(context);
+    }
+    super.initState();
   }
 
   @override
@@ -396,7 +448,20 @@ class _PageMainState extends State<PageMain> {
                   style: listurgerBar,
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  if (!switchControl) {
+                    _showDialogSignOut();
+                  } else {
+                    setState(() {
+                      Fluttertoast.showToast(
+                        msg: "โปรด 'ปิดร้าน' ก่อนออกจากระบบ",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.white,
+                        textColor: Colors.orange,
+                        fontSize: 16.0,
+                      );
+                    });
+                  }
                 },
               ),
             ]),
@@ -410,9 +475,7 @@ class _PageMainState extends State<PageMain> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  switchControl ? 
-                  
-                  openJob(context) : closeJob(),
+                  switchControl ? openJob(context) : closeJob(),
                 ],
               ),
             ),

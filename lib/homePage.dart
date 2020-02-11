@@ -1,7 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/server/server.dart';
+import 'package:hew_maii_res/sign/save_login.dart';
 import 'package:hew_maii_res/sign/sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -9,6 +18,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String user = '', pass = '';
+
   Future<bool> _onWillPop() async {
     return (await showDialog(
           context: context,
@@ -17,23 +28,79 @@ class _MyHomePageState extends State<MyHomePage> {
               'แน่ใจหรือไม่ ?',
               style: TextStyle(fontFamily: FontStyles().fontFamily),
             ),
-            content: new Text('คุณต้องการออกจากแอพนี้',
-              style: TextStyle(fontFamily: FontStyles().fontFamily),),
+            content: new Text(
+              'คุณต้องการออกจากแอพนี้',
+              style: TextStyle(fontFamily: FontStyles().fontFamily),
+            ),
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: new Text('ไม่',
-              style: TextStyle(fontFamily: FontStyles().fontFamily),),
+                child: new Text(
+                  'ไม่',
+                  style: TextStyle(fontFamily: FontStyles().fontFamily),
+                ),
               ),
               new FlatButton(
                 onPressed: () => SystemNavigator.pop(),
-                child: new Text('ใช่',
-              style: TextStyle(fontFamily: FontStyles().fontFamily),),
+                child: new Text(
+                  'ใช่',
+                  style: TextStyle(fontFamily: FontStyles().fontFamily),
+                ),
               ),
             ],
           ),
         )) ??
         false;
+  }
+
+  Future<String> _getSaveLogin() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    user = prefs.get('resUsername');
+    pass = prefs.get('resPassword');
+    print("value in local" + user + "/" + pass);
+  }
+
+  @override
+  void initState() {
+    _getSaveLogin();
+    if (user != null) {
+      Timer(Duration(seconds: 3), () {
+        login();
+      });
+    }
+
+    super.initState();
+  }
+
+  Future<List> login() async {
+    // print(response.body);
+    final response = await http.post(Server().addressLogin,
+        body: {"username": user, "password": pass});
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var status;
+    status = "${datauser[0]['status']}";
+
+    if (status == 'false') {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "Username และ Password ไม่ถูกต้อง",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
+    } else if (status != 'false') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SaveLogin(),
+        ),
+      );
+    }
+    return datauser;
   }
 
   @override

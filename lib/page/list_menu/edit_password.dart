@@ -1,6 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
+import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
+import 'package:hew_maii_res/server/server.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
 
 class EditPassword extends StatefulWidget {
   @override
@@ -22,6 +29,87 @@ class _EditPasswordState extends State<EditPassword> {
       logResPassword = prefs.getString('resPassword');
       print("Get : " + logResName + " , " + logResPassword + " , " + logID);
     });
+  }
+
+  _postUserPass() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      prefs.setString('resPassword', controlPasswordNewCon.text);
+    });
+  }
+
+  void _showDialogAccept() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("ยืนยันการเปลี่ยนรหัสผ่าน",
+              style: TextStyle(fontFamily: FontStyles().fontFamily)),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("ปิด",
+                  style: TextStyle(fontFamily: FontStyles().fontFamily)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new RaisedButton(
+                child: new Text(
+                  "ตกลง",
+                  style: TextStyle(
+                      color: Colors.white, fontFamily: FontStyles().fontFamily),
+                ),
+                onPressed: () {
+                  fecthUpdatePass();
+                }),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<List> fecthUpdatePass() async {
+    // print(response.body);
+    final response = await http.post(Server().updatePassword,
+        body: {"res_id": logID, "new_pass": controlPasswordNewCon.text});
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var txtstatus = "${datauser[0]['status']}";
+    if (txtstatus == 'true') {
+      print("Upadate Succuss!!");
+      _postUserPass();
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "บันทึกเรียบร้อย",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DetailRestaurant(),
+        ),
+      );
+    } else {
+      setState(() {
+        Fluttertoast.showToast(
+          msg: "พบปัญหา ไม่สามารถบันทึกได้ !",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.orange,
+          fontSize: 16.0,
+        );
+      });
+    }
+    return datauser;
   }
 
   @override
@@ -172,6 +260,7 @@ class _EditPasswordState extends State<EditPassword> {
                                           onPressed: () {
                                             if (_formKey.currentState
                                                 .validate()) {
+                                              _showDialogAccept();
                                               // Navigator.push(
                                               //   context,
                                               //   MaterialPageRoute(
