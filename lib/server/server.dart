@@ -23,5 +23,10 @@ class Server {
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiPushStatusRes.php";
   String dataDriverOrder =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetDriverOrder.php";
+  String acceptStatusOrder =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetOrderAcceptRes.php";
+
+  String accountSaleRes =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetAccountRes.php";
   Server() : super();
 }

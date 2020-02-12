@@ -69,7 +69,21 @@ class _FoodMenuState extends State<FoodMenu> {
   Widget _noFood() {
     return Container(
       child: Column(
-        children: <Widget>[Icon(Icons.ac_unit)],
+        children: <Widget>[
+          Padding(padding: EdgeInsets.all(30)),
+          Icon(
+            Icons.layers_clear,
+            color: Colors.white,
+            size: 100,
+          ),
+          Text(
+            "ไม่มีรายการ",
+            style: TextStyle(
+                fontFamily: FontStyles().fontFamily,
+                color: Colors.white,
+                fontSize: 26),
+          )
+        ],
       ),
     );
   }

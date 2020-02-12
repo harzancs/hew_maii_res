@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/model/link_image.dart';
+import 'package:hew_maii_res/page/account/account_main.dart';
 import 'package:hew_maii_res/page/list_menu/detail_retaurant.dart';
 import 'package:hew_maii_res/page/list_menu/food_menu.dart';
 import 'package:hew_maii_res/page/list_menu/order/order_detail.dart';
@@ -92,14 +93,8 @@ class _PageMainState extends State<PageMain> {
     var datauser = json.decode(response.body);
     print(response.body);
     var txtstatus = "${datauser[0]['status']}";
-    if (txtstatus == 'true') {
+    if (txtstatus != 'false') {
       setState(() {
-        setState(() {
-          var now = new DateTime.now();
-          setState(() {
-            _date1 = DateFormat("dd/MM/yyyy").format(now);
-          });
-        });
         Fluttertoast.showToast(
           msg: "เปิดร้าน",
           toastLength: Toast.LENGTH_SHORT,
@@ -108,6 +103,12 @@ class _PageMainState extends State<PageMain> {
           textColor: Colors.orange,
           fontSize: 16.0,
         );
+        setState(() {
+          var now = new DateTime.now();
+          setState(() {
+            _date1 = DateFormat("dd/MM/yyyy").format(now);
+          });
+        });
       });
     } else if (txtstatus == 'false') {}
     return datauser;
@@ -141,14 +142,6 @@ class _PageMainState extends State<PageMain> {
         textHolder = 'Switch is OFF';
       });
       print('Switch is OFF');
-      // Put your code here which you want to execute on Switch OFF event.
-    }
-  }
-
-  Widget txtStatus(bool swithControl) {
-    if (swithControl == true) {
-      return Text("เปิดร้าน OPEN", style: styleOpen);
-    } else {
       setState(() {
         Fluttertoast.showToast(
           msg: "ปิดร้าน",
@@ -159,9 +152,68 @@ class _PageMainState extends State<PageMain> {
           fontSize: 16.0,
         );
       });
+      // Put your code here which you want to execute on Switch OFF event.
+    }
+  }
+
+  Widget txtStatus(bool swithControl) {
+    if (swithControl == true) {
+      return Text("เปิดร้าน OPEN", style: styleOpen);
+    } else {
       return Text("ปิดร้าน CLOSE", style: styleClose);
     }
   }
+
+  //--------------------
+  _iconHide6(String numStatus) {
+    if (numStatus == "0") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _iconHide1(String numStatus) {
+    if (numStatus == "2") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _iconHide2(String numStatus) {
+    int.parse(numStatus);
+    if (int.parse(numStatus) > 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _iconHide3(String numStatus) {
+    if (int.parse(numStatus) > 3) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _iconHide4(String numStatus) {
+    if (int.parse(numStatus) > 5) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  _iconHide5(String numStatus) {
+    if (int.parse(numStatus) == 7) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  //--------------------
 
   Widget closeJob() {
     return Center(
@@ -225,7 +277,7 @@ class _PageMainState extends State<PageMain> {
                   child: Card(
                       child: InkWell(
                     onTap: () {
-                      if (listOrder[index].orderStatus.toString() == '1') {
+                      if (listOrder[index].orderStatus.toString() != '1') {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -233,20 +285,10 @@ class _PageMainState extends State<PageMain> {
                                 idOrder: listOrder[index].orderID.toString(),
                                 orderPrice:
                                     listOrder[index].orderPrice.toString(),
-                                orderOther: listOrder[index].orderOther),
+                                orderOther: listOrder[index].orderOther,
+                                orderStatus: listOrder[index].orderStatus),
                           ),
                         );
-                      } else {
-                        setState(() {
-                          Fluttertoast.showToast(
-                            msg: "ออเดอร์นี้ถูกจัดการเรียบร้อยแล้ว",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            backgroundColor: Colors.white,
-                            textColor: Colors.orange,
-                            fontSize: 16.0,
-                          );
-                        });
                       }
                     },
                     child: Column(
@@ -260,12 +302,67 @@ class _PageMainState extends State<PageMain> {
                                 Padding(
                                   padding: EdgeInsets.all(5),
                                 ),
-                                Text(
-                                  "OR" + listOrder[index].orderID,
-                                  style: TextStyle(
-                                      fontFamily: FontStyles().fontFamily,
-                                      fontSize: 34,
-                                      color: Colors.grey),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Visibility(
+                                            visible: _iconHide1(
+                                                listOrder[index].orderStatus),
+                                            child: Text(
+                                              "NEW",
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      FontStyles().fontFamily,
+                                                  color: Color(0xFFFF6F18)),
+                                            )),
+                                        Visibility(
+                                            visible: _iconHide2(
+                                                listOrder[index].orderStatus),
+                                            child: Icon(
+                                              Icons.store,
+                                              color: Colors.grey,
+                                            )),
+                                        Visibility(
+                                            visible: _iconHide3(
+                                                listOrder[index].orderStatus),
+                                            child: Icon(
+                                              Icons.motorcycle,
+                                              color: Colors.grey,
+                                            )),
+                                        Visibility(
+                                            visible: _iconHide4(
+                                                listOrder[index].orderStatus),
+                                            child: Icon(
+                                              Icons.location_on,
+                                              color: Colors.grey,
+                                            )),
+                                        Visibility(
+                                            visible: _iconHide5(
+                                                listOrder[index].orderStatus),
+                                            child: Icon(
+                                              Icons.done,
+                                              color: Colors.green,
+                                            )),
+                                        Visibility(
+                                            visible: _iconHide6(
+                                                listOrder[index].orderStatus),
+                                            child: Icon(
+                                              Icons.clear,
+                                              color: Colors.red,
+                                            )),
+                                      ],
+                                    ),
+                                    Text(
+                                      "OR" + listOrder[index].orderID,
+                                      style: TextStyle(
+                                          fontFamily: FontStyles().fontFamily,
+                                          fontSize: 34,
+                                          color: Colors.grey),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -512,7 +609,12 @@ class _PageMainState extends State<PageMain> {
                   style: listurgerBar,
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MainAccount(),
+                    ),
+                  );
                 },
               ),
               Divider(

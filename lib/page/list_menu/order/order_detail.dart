@@ -13,8 +13,13 @@ class OrderDetail extends StatefulWidget {
   final String idOrder;
   final String orderPrice;
   final String orderOther;
+  final String orderStatus;
   OrderDetail(
-      {Key key, @required this.idOrder, this.orderPrice, this.orderOther})
+      {Key key,
+      @required this.idOrder,
+      this.orderPrice,
+      this.orderOther,
+      this.orderStatus})
       : super(key: key);
   @override
   _OrderDetailState createState() => _OrderDetailState();
@@ -37,6 +42,12 @@ class _OrderDetailState extends State<OrderDetail> {
   String logID = '';
   var listOrderDetail = new List<DataOrderDetail>();
 
+  //----------
+  bool hideButton1 = true;
+  bool hideButton2 = false;
+  bool hideButton3 = true;
+  //----------
+
   _getDataLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -44,6 +55,8 @@ class _OrderDetailState extends State<OrderDetail> {
     });
     getDeatilOrder(logID);
   }
+
+  //---Server------------
 
   Future<List> getDeatilOrder(String logID) async {
     // print(response.body);
@@ -65,10 +78,33 @@ class _OrderDetailState extends State<OrderDetail> {
     return datauser;
   }
 
-  //----------
-  bool hideButton1 = true;
-  bool hideButton2 = false;
-  //----------
+  Future<List> getAcceptOrder(String logID) async {
+    // print(response.body);
+    final response = await http.post(Server().acceptStatusOrder,
+        body: {"resId": logID, "orderId": widget.idOrder});
+    var datauser = json.decode(response.body);
+    print(response.body);
+    var txtstatus = "${datauser[0]['status']}";
+    if (txtstatus == 'false') {
+      setState(() {
+        hideButton1 = true;
+        hideButton2 = false;
+        hideButton3 = true;
+      });
+    } else if (txtstatus == 'true') {
+      setState(() {
+        hideButton1 = false;
+        hideButton2 = true;
+        hideButton3 = false;
+      });
+    } else {
+      setState(() {
+        hideButton3 = false;
+      });
+    }
+    return datauser;
+  }
+  //---Server------------
 
   void _showDialogAcceptOrder() {
     // flutter defined function
@@ -102,10 +138,7 @@ class _OrderDetailState extends State<OrderDetail> {
                       color: Colors.white, fontFamily: FontStyles().fontFamily),
                 ),
                 onPressed: () {
-                  setState(() {
-                    hideButton1 = false;
-                    hideButton2 = true;
-                  });
+                  getAcceptOrder(logID);
                   Navigator.of(context).pop();
                 }),
           ],
@@ -156,6 +189,22 @@ class _OrderDetailState extends State<OrderDetail> {
 
   @override
   void initState() {
+    setState(() {
+      if (widget.orderStatus == "2") {
+        hideButton1 = true;
+        hideButton2 = false;
+        hideButton3 = true;
+      } else if (widget.orderStatus == "3") {
+        hideButton1 = false;
+        hideButton2 = true;
+        hideButton3 = false;
+      } else {
+        hideButton1 = false;
+        hideButton2 = false;
+        hideButton3 = false;
+      }
+    });
+
     _getDataLocal();
     super.initState();
   }
@@ -173,31 +222,33 @@ class _OrderDetailState extends State<OrderDetail> {
               fontFamily: FontStyles().fontFamily, color: Color(0xFFFF6F18)),
         ),
         actions: <Widget>[
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return <PopupMenuEntry<String>>[
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: ListTile(
-                    title: Text("ยกเลิกออเดอร์นี้",
-                        style: TextStyle(
-                          fontFamily: FontStyles().fontFamily,
-                          fontSize: 16,
-                        )),
-                    leading: Icon(Icons.delete),
-                    onTap: () {
-                      _showDialogCancelOrder();
-                    },
-                  ),
-                )
-              ];
-            },
-            icon: Icon(
-              Icons.more_vert,
-              size: 30,
-              color: Color(0xFFFF6F18),
-            ),
-          )
+          Visibility(
+              visible: hideButton3,
+              child: PopupMenuButton(
+                itemBuilder: (context) {
+                  return <PopupMenuEntry<String>>[
+                    PopupMenuItem<String>(
+                      value: 'delete',
+                      child: ListTile(
+                        title: Text("ยกเลิกออเดอร์นี้",
+                            style: TextStyle(
+                              fontFamily: FontStyles().fontFamily,
+                              fontSize: 16,
+                            )),
+                        leading: Icon(Icons.delete),
+                        onTap: () {
+                          _showDialogCancelOrder();
+                        },
+                      ),
+                    )
+                  ];
+                },
+                icon: Icon(
+                  Icons.more_vert,
+                  size: 30,
+                  color: Color(0xFFFF6F18),
+                ),
+              ))
         ],
       ),
       body: Container(
@@ -321,14 +372,6 @@ class _OrderDetailState extends State<OrderDetail> {
                 child: FlatButton.icon(
                   onPressed: () {
                     _showDialogAcceptOrder();
-
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         ReceiveQRcode(idOrder: widget.idOrder, resId: logID),
-                    //   ),
-                    // );
                   },
                   icon: Icon(
                     Icons.local_dining,
