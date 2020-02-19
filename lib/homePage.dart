@@ -55,8 +55,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<String> _getSaveLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    user = prefs.get('resUsername');
-    pass = prefs.get('resPassword');
+    user = prefs.getString('resUsername');
+    pass = prefs.getString('resPassword');
     print("value in local" + user + "/" + pass);
   }
 
