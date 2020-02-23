@@ -28,5 +28,14 @@ class Server {
 
   String accountSaleRes =
       "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/api_res/apiGetAccountRes.php";
+  String getLocationMain =
+      "http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/apiGetLocationMain.php";
+
+  //-------------------------- */
+  String uploadEndPoint =
+      'http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/image/main/upload_image.php';
+  String newRes =
+      'http://std.csit.sci.tsu.ac.th/592021212/Homework/hew-maii/apiPushRestaurant.php';
+  //------------------------------
   Server() : super();
 }

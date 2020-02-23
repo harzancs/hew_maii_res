@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
 import 'package:hew_maii_res/server/server.dart';
+import 'package:hew_maii_res/sign/registor/registor_main.dart';
 import 'package:hew_maii_res/sign/save_login.dart';
 import 'package:hew_maii_res/sign/sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -186,6 +187,32 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Padding(
                               padding: EdgeInsets.all(2),
+                            ),
+                            ButtonTheme(
+                              minWidth: 300.0,
+                              child: RaisedButton(
+                                shape: new RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(9.0),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RegistorMain(),
+                                    ),
+                                  );
+                                },
+                                padding: EdgeInsets.all(8.0),
+                                color: Color.fromRGBO(250, 250, 250, 50),
+                                child: Text(
+                                  "ลงทะเบียนเข้าร่วม",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontFamily: FontStyles().fontFamily,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                              ),
                             ),
                             Padding(
                               padding: EdgeInsets.all(10),
