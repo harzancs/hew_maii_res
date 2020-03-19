@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
@@ -299,15 +300,18 @@ class _RegistorMainState extends State<RegistorMain> {
                               SizedBox(
                                 child: TextFormField(
                                   controller: controlPhone,
-                                  maxLength: 10,
                                   autofocus: false,
+                                  maxLength: 10,
+                                  inputFormatters: [
+                                    WhitelistingTextInputFormatter.digitsOnly
+                                  ],
                                   validator: (val) {
                                     if (val.length != 10) {
                                       return 'กรุณาป้อนให้ครบ 10 หลัก';
                                     }
                                     return null;
                                   },
-                                  keyboardType: TextInputType.number,
+                                  keyboardType: TextInputType.phone,
                                   style: TextStyle(
                                       fontSize: 18.0,
                                       fontFamily: FontStyles().fontFamily,
@@ -467,7 +471,11 @@ class _RegistorMainState extends State<RegistorMain> {
                                     if (val.isEmpty) {
                                       return 'กรุณาป้อนข้อมูล';
                                     } else {
-                                      return null;
+                                      if (!val.contains(',')) {
+                                        return 'โปรจัดรูปแบบ ละติจูด , ลองติจูด';
+                                      } else {
+                                        return null;
+                                      }
                                     }
                                   },
                                   style: TextStyle(

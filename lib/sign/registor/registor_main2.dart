@@ -5,6 +5,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hew_maii_res/model/font_style.dart';
@@ -275,11 +276,10 @@ class _RegistorMainTwoState extends State<RegistorMainTwo> {
                                   controller: controlUsername,
                                   autofocus: false,
                                   validator: (val) {
-                                    if (val.isEmpty) {
-                                      return 'กรุณาป้อนข้อมูล';
-                                    } else {
-                                      return null;
+                                    if (val.length <6) {
+                                      return 'กรุณาป้อนมากกว่า 6 อักษร';
                                     }
+                                    return null;
                                   },
                                   style: TextStyle(
                                       fontSize: 18.0,
@@ -300,7 +300,7 @@ class _RegistorMainTwoState extends State<RegistorMainTwo> {
                                         borderRadius:
                                             BorderRadius.circular(9.0),
                                       ),
-                                      hintText: 'Username',
+                                      hintText: 'Username (6 อักษรขึ้นไป)',
                                       hintStyle: TextStyle(
                                           color: Colors.white,
                                           fontFamily: FontStyles().fontFamily)),
